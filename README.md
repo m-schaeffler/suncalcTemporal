@@ -1,7 +1,7 @@
-SunCalc2
+SunCalc-Temporal
 =======
 
-SunCalc is a tiny BSD-licensed JavaScript library for calculating sun position,
+SunCalc is a tiny BSD-licensed NPM packet for calculating sun position,
 sunlight phases (times for sunrise, sunset, dusk, etc.),
 moon position and lunar phase for the given location and time,
 created by [Vladimir Agafonkin](http://agafonkin.com/en) ([@mourner](https://github.com/mourner))
@@ -13,33 +13,35 @@ and [the planets](http://aa.quae.nl/en/reken/hemelpositie.html).
 You can read about different twilight phases calculated by SunCalc
 in the [Twilight article on Wikipedia](http://en.wikipedia.org/wiki/Twilight).
 
+It was later updated by:
+- [mschaeffler](https://github.com/~mschaeffler)
+- [andiling](https://github.com/~andiling)
+
+## Installation
+
+```bash
+$ npm install suncalc-temporal
+```
+
+```js
+var SunCalc = require('suncalc-temporal');
+```
 
 ## Usage example
 
 ```javascript
 // get today's sunlight times for London
-var times = SunCalc.getTimes(new Date(), 51.5, -0.1);
+const times = SunCalc.getTimes(new Date(), 51.5, -0.1);
 
 // format sunrise time from the Date object
-var sunriseStr = times.sunrise.getHours() + ':' + times.sunrise.getMinutes();
+const sunriseStr = times.sunrise.getHours() + ':' + times.sunrise.getMinutes();
 
 // get position of the sun (azimuth and altitude) at today's sunrise
-var sunrisePos = SunCalc.getPosition(times.sunrise, 51.5, -0.1);
+const sunrisePos = SunCalc.getPosition(times.sunrise, 51.5, -0.1);
 
 // get sunrise azimuth in degrees
-var sunriseAzimuth = sunrisePos.azimuth * 180 / Math.PI;
+const sunriseAzimuth = sunrisePos.azimuth * 180 / Math.PI;
 ```
-
-SunCalc is also available as an NPM package:
-
-```bash
-$ npm install suncalc2
-```
-
-```js
-var SunCalc = require('suncalc2');
-```
-
 
 ## Reference
 
@@ -152,59 +154,59 @@ If `inUTC` is set to true, it will instead search the specified date from 0 to 2
 
 ## Changelog
 
-#### 0.1.0 &mschaeffler; Jun 2026
+#### 0.1.0 &mdash; mschaeffler &mdash; Jun 2026
 
 - converted to modern JS
 
-#### 1.8.1 &andiling; Dec 07, 2018
+#### 1.8.1 &mdash; andiling &mdash; Dec 07, 2018
 
 - Nadir moved from past to future
 
-#### 1.8.0 &mdash; Dec 22, 2016
+#### 1.8.0 &mdash; mourner &mdash; Dec 22, 2016
 
 - Improved precision of moonrise/moonset calculations.
 - Added `parallacticAngle` calculation to `getMoonPosition`.
 - Default to today's date in `getMoonIllumination`.
 - Fixed incompatibility when using Browserify/Webpack together with a global AMD loader.
 
-#### 1.7.0 &mdash; Nov 11, 2015
+#### 1.7.0 &mdash; mourner &mdash; Nov 11, 2015
 
 - Added `inUTC` argument to `getMoonTimes`.
 
-#### 1.6.0 &mdash; Oct 27, 2014
+#### 1.6.0 &mdash; mourner &mdash; Oct 27, 2014
 
 - Added `SunCalc.getMoonTimes` for calculating moon rise and set times.
 
-#### 1.5.1 &mdash; May 16, 2014
+#### 1.5.1 &mdash; mourner &mdash; May 16, 2014
 
 - Exposed `SunCalc.times` property with defined daylight times.
 - Slightly improved `SunCalc.getTimes` performance.
 
-#### 1.4.0 &mdash; Apr 10, 2014
+#### 1.4.0 &mdash; mourner &mdash; Apr 10, 2014
 
 - Added `phase` to `SunCalc.getMoonIllumination` results (moon phase).
 - Switched from mocha to tape for tests.
 
-#### 1.3.0 &mdash; Feb 21, 2014
+#### 1.3.0 &mdash; mourner &mdash; Feb 21, 2014
 
 - Added `SunCalc.getMoonIllumination` (in place of `getMoonFraction`) that returns an object with `fraction` and `angle`
 (angle of illuminated limb of the moon).
 
-#### 1.2.0 &mdash; Mar 07, 2013
+#### 1.2.0 &mdash; mourner &mdash; Mar 07, 2013
 
 - Added `SunCalc.getMoonFraction` function that returns illuminated fraction of the moon.
 
-#### 1.1.0 &mdash; Mar 06, 2013
+#### 1.1.0 &mdash; mourner &mdash; Mar 06, 2013
 
 - Added `SunCalc.getMoonPosition` function.
 - Added nadir (darkest time of the day, middle of the night).
 - Added tests.
 
-#### 1.0.0 &mdash; Dec 07, 2011
+#### 1.0.0 &mdash; mourner &mdash; Dec 07, 2011
 
 - Published to NPM.
 - Added `SunCalc.addTime` function.
 
-#### 0.0.0 &mdash; Aug 25, 2011
+#### 0.0.0 &mdash; mourner &mdash; Aug 25, 2011
 
 - First commit.
