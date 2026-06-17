@@ -34,13 +34,23 @@ function toDays(date)   { return toJulian(date) - J2000; }
 
 const e = rad * 23.4397; // obliquity of the Earth
 
-function rightAscension(l, b) { return atan(sin(l) * cos(e) - tan(b) * sin(e), cos(l)); }
-function declination(l, b)    { return asin(sin(b) * cos(e) + cos(b) * sin(e) * sin(l)); }
+function rightAscension(l, b) {
+    return atan(sin(l) * cos(e) - tan(b) * sin(e), cos(l));
+}
+function declination(l, b) {
+    return asin(sin(b) * cos(e) + cos(b) * sin(e) * sin(l));
+}
 
-function azimuth(H, phi, dec)  { return atan(sin(H), cos(H) * sin(phi) - tan(dec) * cos(phi)); }
-function altitude(H, phi, dec) { return asin(sin(phi) * sin(dec) + cos(phi) * cos(dec) * cos(H)); }
+function azimuth(H, phi, dec) {
+    return atan(sin(H), cos(H) * sin(phi) - tan(dec) * cos(phi));
+}
+function altitude(H, phi, dec) {
+    return asin(sin(phi) * sin(dec) + cos(phi) * cos(dec) * cos(H));
+}
 
-function siderealTime(d, lw) { return rad * (280.16 + 360.9856235 * d) - lw; }
+function siderealTime(d, lw) {
+    return rad * (280.16 + 360.9856235 * d) - lw;
+}
 
 function astroRefraction(h) {
     if (h < 0) // the following formula works for positive altitudes only.
@@ -65,8 +75,8 @@ function eclipticLongitude(M) {
 }
 
 function sunCoords(d) {
-    var M = solarMeanAnomaly(d),
-        L = eclipticLongitude(M);
+    const M = solarMeanAnomaly(d),
+          L = eclipticLongitude(M);
 
     return {
         dec: declination(L, 0),
@@ -114,12 +124,20 @@ SunCalc.addTime = function (angle, riseName, setName) {
 
 const J0 = 0.0009;
 
-function julianCycle(d, lw) { return Math.round(d - J0 - lw / (2 * PI)); }
+function julianCycle(d, lw) {
+    return Math.round(d - J0 - lw / (2 * PI));
+}
 
-function approxTransit(Ht, lw, n) { return J0 + (Ht + lw) / (2 * PI) + n; }
-function solarTransitJ(ds, M, L)  { return J2000 + ds + 0.0053 * sin(M) - 0.0069 * sin(2 * L); }
+function approxTransit(Ht, lw, n) {
+    return J0 + (Ht + lw) / (2 * PI) + n;
+}
+function solarTransitJ(ds, M, L) {
+    return J2000 + ds + 0.0053 * sin(M) - 0.0069 * sin(2 * L);
+}
 
-function hourAngle(h, phi, d) { return acos((sin(h) - sin(phi) * sin(d)) / (cos(phi) * cos(d))); }
+function hourAngle(h, phi, d) {
+    return acos((sin(h) - sin(phi) * sin(d)) / (cos(phi) * cos(d)));
+}
 
 // returns set time for the given sun altitude
 function getSetJ(h, lw, phi, dec, n, M, L) {
@@ -132,7 +150,6 @@ function getSetJ(h, lw, phi, dec, n, M, L) {
 // calculates sun times for a given date and latitude/longitude
 
 SunCalc.getTimes = function (date, lat, lng) {
-
     const lw = rad * -lng,
           phi = rad * lat,
 
@@ -167,7 +184,6 @@ SunCalc.getTimes = function (date, lat, lng) {
 // moon calculations, based on http://aa.quae.nl/en/reken/hemelpositie.html formulas
 
 function moonCoords(d) { // geocentric ecliptic coordinates of the moon
-
     const L = rad * (218.316 + 13.176396 * d), // ecliptic longitude
           M = rad * (134.963 + 13.064993 * d), // mean anomaly
           F = rad * (93.272 + 13.229350 * d),  // mean distance
@@ -184,7 +200,6 @@ function moonCoords(d) { // geocentric ecliptic coordinates of the moon
 }
 
 SunCalc.getMoonPosition = function (date, lat, lng) {
-
     const lw  = rad * -lng,
           phi = rad * lat,
           d   = toDays(date),
@@ -209,7 +224,6 @@ SunCalc.getMoonPosition = function (date, lat, lng) {
 // Chapter 48 of "Astronomical Algorithms" 2nd edition by Jean Meeus (Willmann-Bell, Richmond) 1998.
 
 SunCalc.getMoonIllumination = function (date) {
-
     const d = toDays(date || new Date()),
           s = sunCoords(d),
           m = moonCoords(d),
@@ -227,7 +241,6 @@ SunCalc.getMoonIllumination = function (date) {
         angle: angle
     };
 };
-
 
 function hoursLater(date, h) {
     return new Date(date.valueOf() + h * dayMs / 24);

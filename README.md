@@ -1,8 +1,5 @@
-
 SunCalc2
 =======
-
-[![Build Status](https://travis-ci.org/andiling/suncalc2.svg?branch=master)](https://travis-ci.org/andiling/suncalc2)
 
 SunCalc is a tiny BSD-licensed JavaScript library for calculating sun position,
 sunlight phases (times for sunrise, sunset, dusk, etc.),
@@ -155,10 +152,13 @@ If `inUTC` is set to true, it will instead search the specified date from 0 to 2
 
 ## Changelog
 
+#### 0.1.0 &mschaeffler; Jun 2026
+
+- converted to modern JS
+
 #### 1.8.1 &andiling; Dec 07, 2018
 
 - Nadir moved from past to future
-
 
 #### 1.8.0 &mdash; Dec 22, 2016
 

@@ -4,11 +4,11 @@ var SunCalc = require("../suncalc.js");
 describe( 'suncalc-temporal', function () {
   "use strict";
 
-const date = new Date('2013-03-05UTC'),
+  const date = new Date('2013-03-05UTC'),
       lat = 50.5,
       lng = 30.5;
 
-const testTimes = {
+  const testTimes = {
     solarNoon: '2013-03-05T10:10:57Z',
     nadir: '2013-03-05T22:10:57Z',
     sunrise: '2013-03-05T04:34:56Z',
@@ -23,7 +23,7 @@ const testTimes = {
     night: '2013-03-05T17:35:36Z',
     goldenHourEnd: '2013-03-05T05:19:01Z',
     goldenHour: '2013-03-05T15:02:52Z'
-};
+  };
 
   it('getPosition returns azimuth and altitude for the given time and location', function (done) {
     try {
