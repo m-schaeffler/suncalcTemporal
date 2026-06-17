@@ -5,6 +5,8 @@
  https://github.com/m-schaeffler/suncalcTemporal
 */
 
+"use strict";
+
 // shortcuts for easier to read formulas
 
 const PI   = Math.PI,
@@ -193,11 +195,9 @@ SunCalc.getMoonPosition = function (date, lat, lng) {
           // formula 14.1 of "Astronomical Algorithms" 2nd edition by Jean Meeus (Willmann-Bell, Richmond) 1998.
           pa = atan(sin(H), tan(phi) * cos(c.dec) - sin(c.dec) * cos(H));
 
-          h = h + astroRefraction(h); // altitude correction for refraction
-
     return {
         azimuth: azimuth(H, phi, c.dec),
-        altitude: h,
+        altitude: h + astroRefraction(h), // altitude correction for refraction
         distance: c.dist,
         parallacticAngle: pa
     };
@@ -240,8 +240,8 @@ SunCalc.getMoonTimes = function (date, lat, lng, inUTC) {
     if (inUTC) t.setUTCHours(0, 0, 0, 0);
     else t.setHours(0, 0, 0, 0);
 
-    const hc = 0.133 * rad,
-          h0 = SunCalc.getMoonPosition(t, lat, lng).altitude - hc;
+    const hc = 0.133 * rad;
+    let   h0 = SunCalc.getMoonPosition(t, lat, lng).altitude - hc;
     let rise,set;
 
     // go in 2-hour chunks, each time seeing if a 3-point quadratic curve crosses zero (which means rise or set)
@@ -255,9 +255,10 @@ SunCalc.getMoonTimes = function (date, lat, lng, inUTC) {
         const ye = (a * xe + b) * xe + h1;
         const d = b * b - 4 * a * h1;
         let roots = 0;
+        let x1, x2;
 
         if (d >= 0) {
-            dx = Math.sqrt(d) / (Math.abs(a) * 2);
+            const dx = Math.sqrt(d) / (Math.abs(a) * 2);
             x1 = xe - dx;
             x2 = xe + dx;
             if (Math.abs(x1) <= 1) roots++;
