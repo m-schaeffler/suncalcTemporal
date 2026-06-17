@@ -1,7 +1,7 @@
 SunCalc-Temporal
 =======
 
-SunCalc is a tiny BSD-licensed NPM packet for calculating sun position,
+SunCalc-Temporal is a tiny BSD-licensed NPM packet for calculating sun position,
 sunlight phases (times for sunrise, sunset, dusk, etc.),
 moon position and lunar phase for the given location and time,
 created by [Vladimir Agafonkin](http://agafonkin.com/en) ([@mourner](https://github.com/mourner))
@@ -14,7 +14,7 @@ You can read about different twilight phases calculated by SunCalc
 in the [Twilight article on Wikipedia](http://en.wikipedia.org/wiki/Twilight).
 
 It was later updated by:
-- [mschaeffler](https://github.com/~mschaeffler)
+- [m-schaeffler](https://github.com/~m-schaeffler)
 - [andiling](https://github.com/~andiling)
 
 ## Installation
@@ -24,7 +24,7 @@ $ npm install suncalc-temporal
 ```
 
 ```js
-var SunCalc = require('suncalc-temporal');
+const SunCalc = require('suncalc-temporal');
 ```
 
 ## Usage example
@@ -106,7 +106,6 @@ Returns an object with the following properties:
  * `distance`: distance to moon in kilometers
  * `parallacticAngle`: parallactic angle of the moon in radians
 
-
 ### Moon illumination
 
 ```javascript
@@ -154,7 +153,7 @@ If `inUTC` is set to true, it will instead search the specified date from 0 to 2
 
 ## Changelog
 
-#### 0.1.0 &mdash; mschaeffler &mdash; Jun 2026
+#### 0.1.0 &mdash; mschaeffler &mdash; 18.06.2026
 
 - converted to modern JS
 
