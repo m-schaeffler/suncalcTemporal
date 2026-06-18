@@ -5,8 +5,8 @@ describe( 'suncalc-temporal', function () {
   "use strict";
 
   const date = new Date('2013-03-05UTC'),
-      lat = 50.5,
-      lng = 30.5;
+        lat  = 50.5,
+        lng  = 30.5;
 
   const testTimes = {
     solarNoon: '2013-03-05T10:10:57Z',
