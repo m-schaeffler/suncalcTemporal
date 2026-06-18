@@ -42,10 +42,61 @@ describe( 'suncalc-temporal', function () {
     try {
       var times = SunCalc.getTimes(date, lat, lng);
 
-      for (var i in testTimes)
+      for (const i in testTimes)
       {
         times[i].toUTCString().should.match( (new Date(testTimes[i])).toUTCString() );
       }
+      done();
+    }
+    catch(err) {
+      done(err);
+    }
+  });
+
+  it('addTimes adds additional sun levels', function (done) {
+    try {
+      const times1 = SunCalc.getTimes(date, lat, lng);
+      SunCalc.addTime( 30, "highRise", "highSet" );
+      const times2 = SunCalc.getTimes(date, lat, lng);
+
+      let cnt1 = 0;
+      let cnt2 = 0;
+      for (const i in times1)
+      {
+        cnt1++;
+        times1[i].getTime().should.be.within(date.getTime(),date.getTime()+24*3600*1000);
+      }
+      for (const i in times2)
+      {
+        cnt2++;
+        times2[i].getTime().should.be.within(date.getTime(),date.getTime()+24*3600*1000);
+      }
+      cnt1.should.match( 14 );
+      cnt2.should.match( cnt1 + 2 );
+      times2.highRise.getTime().should.match( 1362472644529 );
+      times2.highSet .getTime().should.match( 1362483869785 );
+      done();
+    }
+    catch(err) {
+      done(err);
+    }
+  });
+
+  it('get invalid, if level is not reached', function (done) {
+    try {
+      const date = new Date('2026-12-21UTC');
+      const times = SunCalc.getTimes(date, lat, lng);
+
+      let cnt = 0;
+      for (const i in times)
+      {
+        cnt++;
+        times[i].getTime().should.be.a.Number();
+        //console.log( times[i].getTime() );
+      }
+      cnt.should.match( 16 );
+      times.highRise.getTime().should.be.NaN();
+      times.highSet .getTime().should.be.NaN();
       done();
     }
     catch(err) {
