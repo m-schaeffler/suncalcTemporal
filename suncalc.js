@@ -30,7 +30,7 @@ function toJulian(instant) {
     return instant.epochMilliseconds  / dayMs - 0.5 + J1970;
 }
 function fromJulian(j) {
-    return new Date((j + 0.5 - J1970) * dayMs);
+    return Number.isNaN( j ) ? null : Temporal.Instant.fromEpochMilliseconds( Math.round( (j + 0.5 - J1970) * dayMs ) );
 }
 function toDays(instant) {
     return toJulian(instant) - J2000;
