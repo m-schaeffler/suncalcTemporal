@@ -26,14 +26,14 @@ const dayMs = 1000 * 60 * 60 * 24,
       J1970 = 2440588,
       J2000 = 2451545;
 
-function toJulian(date) {
-    return date.valueOf() / dayMs - 0.5 + J1970;
+function toJulian(instant) {
+    return instant.epochMilliseconds  / dayMs - 0.5 + J1970;
 }
 function fromJulian(j) {
     return new Date((j + 0.5 - J1970) * dayMs);
 }
-function toDays(date) {
-    return toJulian(date) - J2000;
+function toDays(instant) {
+    return toJulian(instant) - J2000;
 }
 
 // general calculations for position
@@ -94,10 +94,10 @@ let SunCalc = {};
 
 // calculates sun position for a given date and latitude/longitude
 
-SunCalc.getPosition = function (date, lat, lng) {
+SunCalc.getPosition = function (instant, lat, lng) {
     const lw  = rad * -lng,
           phi = rad * lat,
-          d   = toDays(date),
+          d   = toDays(instant ?? Temporal.now.instant()),
           c  = sunCoords(d),
           H  = siderealTime(d, lw) - c.ra;
 
@@ -155,11 +155,11 @@ function getSetJ(h, lw, phi, dec, n, M, L) {
 
 // calculates sun times for a given date and latitude/longitude
 
-SunCalc.getTimes = function (date, lat, lng) {
+SunCalc.getTimes = function (instant, lat, lng) {
     const lw = rad * -lng,
           phi = rad * lat,
 
-          d = toDays(date),
+          d = toDays(instant ?? Temporal.now.instant()),
           n = julianCycle(d, lw),
           ds = approxTransit(0, lw, n),
 
@@ -205,10 +205,10 @@ function moonCoords(d) { // geocentric ecliptic coordinates of the moon
     };
 }
 
-SunCalc.getMoonPosition = function (date, lat, lng) {
+SunCalc.getMoonPosition = function (instant, lat, lng) {
     const lw  = rad * -lng,
           phi = rad * lat,
-          d   = toDays(date),
+          d   = toDays(instant ?? Temporal.now.instant()),
 
           c = moonCoords(d),
           H = siderealTime(d, lw) - c.ra,
@@ -229,8 +229,8 @@ SunCalc.getMoonPosition = function (date, lat, lng) {
 // based on http://idlastro.gsfc.nasa.gov/ftp/pro/astro/mphase.pro formulas and
 // Chapter 48 of "Astronomical Algorithms" 2nd edition by Jean Meeus (Willmann-Bell, Richmond) 1998.
 
-SunCalc.getMoonIllumination = function (date) {
-    const d = toDays(date || new Date()),
+SunCalc.getMoonIllumination = function (instant) {
+    const d = toDays(instant ?? Temporal.now.instant()),
           s = sunCoords(d),
           m = moonCoords(d),
 
@@ -248,16 +248,17 @@ SunCalc.getMoonIllumination = function (date) {
     };
 };
 
-function hoursLater(date, h) {
-    return new Date(date.valueOf() + h * dayMs / 24);
+function hoursLater(zdt, hours) {
+    const h = Math.trunc(hours);
+    const m = Math.round( (hours-h) * 60 );
+    //console.log(h,m)
+    return zdt.add({hours:h, minutes:m});
 }
 
 // calculations for moon rise/set times are based on http://www.stargazing.net/kepler/moonrise.html article
 
-SunCalc.getMoonTimes = function (date, lat, lng, inUTC) {
-    let t = new Date(date);
-    if (inUTC) t.setUTCHours(0, 0, 0, 0);
-    else t.setHours(0, 0, 0, 0);
+SunCalc.getMoonTimes = function (zdt, lat, lng) {
+    let t = zdt.startOfDay();
 
     const hc = 0.133 * rad;
     let   h0 = SunCalc.getMoonPosition(t, lat, lng).altitude - hc;
@@ -265,8 +266,8 @@ SunCalc.getMoonTimes = function (date, lat, lng, inUTC) {
 
     // go in 2-hour chunks, each time seeing if a 3-point quadratic curve crosses zero (which means rise or set)
     for( let i = 1; i <= 24; i += 2 ) {
-        const h1 = SunCalc.getMoonPosition(hoursLater(t, i), lat, lng).altitude - hc;
-        const h2 = SunCalc.getMoonPosition(hoursLater(t, i + 1), lat, lng).altitude - hc;
+        const h1 = SunCalc.getMoonPosition(t.add({hours:i}), lat, lng).altitude - hc;
+        const h2 = SunCalc.getMoonPosition(t.add({hours:i+1}), lat, lng).altitude - hc;
 
         const a = (h0 + h2) / 2 - h1;
         const b = (h2 - h0) / 2;

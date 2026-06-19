@@ -1,6 +1,6 @@
 {
   "name": "suncalc-temporal",
-  "version": "0.1.0",
+  "version": "3.0.0",
   "description": "A tiny JavaScript library for calculating sun/moon positions and phases.",
   "homepage": "https://github.com/m-schaeffler/suncalcTemporal",
   "keywords": [

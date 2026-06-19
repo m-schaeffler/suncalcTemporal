@@ -4,9 +4,11 @@ var SunCalc = require("../suncalc.js");
 describe( 'suncalc-temporal', function () {
   "use strict";
 
-  const date = new Date('2013-03-05UTC'),
+  const date = Temporal.Instant.from('2013-03-05T00:00:00Z'),
         lat  = 50.5,
         lng  = 30.5;
+
+console.log(date.toString())
 
   const testTimes = {
     solarNoon: '2013-03-05T10:10:57Z',
@@ -64,12 +66,14 @@ describe( 'suncalc-temporal', function () {
       for (const i in times1)
       {
         cnt1++;
-        times1[i].getTime().should.be.within(date.getTime(),date.getTime()+24*3600*1000);
+        //console.log(times1[i])
+        times1[i].getTime().should.be.within(date.epochMilliseconds,date.epochMilliseconds+24*3600*1000);
       }
       for (const i in times2)
       {
         cnt2++;
-        times2[i].getTime().should.be.within(date.getTime(),date.getTime()+24*3600*1000);
+        //console.log(times2[i])
+        times2[i].getTime().should.be.within(date.epochMilliseconds,date.epochMilliseconds+24*3600*1000);
       }
       cnt1.should.match( 14 );
       cnt2.should.match( cnt1 + 2 );
@@ -84,7 +88,7 @@ describe( 'suncalc-temporal', function () {
 
   it('get invalid, if level is not reached', function (done) {
     try {
-      const date = new Date('2026-12-21UTC');
+      const date =  Temporal.Instant.from('2026-12-21T00:00:00Z');
       const times = SunCalc.getTimes(date, lat, lng);
 
       let cnt = 0;
@@ -134,10 +138,10 @@ describe( 'suncalc-temporal', function () {
 
   it('getMoonTimes returns moon rise and set times', function (done) {
     try {
-      var moonTimes = SunCalc.getMoonTimes(new Date('2013-03-04UTC'), lat, lng, true);
+      var moonTimes = SunCalc.getMoonTimes(Temporal.ZonedDateTime.from('2013-03-04T00:00:00[UTC]'), lat, lng, true);
 
-      moonTimes.rise.toUTCString().should.match( 'Mon, 04 Mar 2013 23:54:29 GMT');
-      moonTimes.set.toUTCString().should.match( 'Mon, 04 Mar 2013 07:47:58 GMT');
+      moonTimes.rise.toString().should.match( '2013-03-04T23:54:00+00:00[UTC]');
+      moonTimes.set.toString().should.match( '2013-03-04T07:48:00+00:00[UTC]');
       done();
     }
     catch(err) {
