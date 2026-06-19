@@ -31,10 +31,10 @@ const SunCalc = require('suncalc-temporal');
 
 ```javascript
 // get today's sunlight times for London
-const times = SunCalc.getTimes(new Date(), 51.5, -0.1);
+const times = SunCalc.getTimes(Temporal.Now.instant(), 51.5, -0.1);
 
-// format sunrise time from the Date object
-const sunriseStr = times.sunrise.getHours() + ':' + times.sunrise.getMinutes();
+// format sunrise time from the Temporal.Instant object
+const sunriseStr = times.sunrise.toString();
 
 // get position of the sun (azimuth and altitude) at today's sunrise
 const sunrisePos = SunCalc.getPosition(times.sunrise, 51.5, -0.1);
@@ -48,10 +48,10 @@ const sunriseAzimuth = sunrisePos.azimuth * 180 / Math.PI;
 ### Sunlight times
 
 ```javascript
-SunCalc.getTimes(/*Date*/ date, /*Number*/ latitude, /*Number*/ longitude)
+SunCalc.getTimes(/*Temporal.Instant*/ date, /*Number*/ latitude, /*Number*/ longitude)
 ```
 
-Returns an object with the following properties (each is a `Date` object):
+Returns an object with the following properties (each is a `Temporal.Instant` object):
 
 | Property        | Description                                                              |
 | --------------- | ------------------------------------------------------------------------ |
@@ -82,7 +82,7 @@ Adds a custom time when the sun reaches the given angle to results returned by `
 ### Sun position
 
 ```javascript
-SunCalc.getPosition(/*Date*/ timeAndDate, /*Number*/ latitude, /*Number*/ longitude)
+SunCalc.getPosition(/*Temporal.Instant*/ timeAndDate, /*Number*/ latitude, /*Number*/ longitude)
 ```
 
 Returns an object with the following properties:
@@ -96,7 +96,7 @@ Returns an object with the following properties:
 ### Moon position
 
 ```javascript
-SunCalc.getMoonPosition(/*Date*/ timeAndDate, /*Number*/ latitude, /*Number*/ longitude)
+SunCalc.getMoonPosition(/*Temporal.Instant*/ timeAndDate, /*Number*/ latitude, /*Number*/ longitude)
 ```
 
 Returns an object with the following properties:
@@ -109,7 +109,7 @@ Returns an object with the following properties:
 ### Moon illumination
 
 ```javascript
-SunCalc.getMoonIllumination(/*Date*/ timeAndDate)
+SunCalc.getMoonIllumination(/*Temporal.Instant*/ timeAndDate)
 ```
 
 Returns an object with the following properties:
@@ -138,20 +138,23 @@ The zenith angle can be used do draw the moon shape from the observers perspecti
 ### Moon rise and set times
 
 ```js
-SunCalc.getMoonTimes(/*Date*/ date, /*Number*/ latitude, /*Number*/ longitude[, inUTC])
+SunCalc.getMoonTimes(/*Temporal.ZonedDateTime*/ zdt, /*Number*/ latitude, /*Number*/ longitude)
 ```
 
 Returns an object with the following properties:
 
- * `rise`: moonrise time as `Date`
- * `set`: moonset time as `Date`
+ * `rise`: moonrise time as `Temporal.ZonedDateTime`
+ * `set`: moonset time as `Temporal.ZonedDateTime`
  * `alwaysUp`: `true` if the moon never rises/sets and is always _above_ the horizon during the day
  * `alwaysDown`: `true` if the moon is always _below_ the horizon
 
-By default, it will search for moon rise and set during local user's day (frou 0 to 24 hours).
-If `inUTC` is set to true, it will instead search the specified date from 0 to 24 UTC hours.
+It will search for moon rise and set during the time zone of the zdt.
 
 ## Changelog
+
+#### 3.0.0 &mdash; mschaeffler &mdash; 19.06.2026
+
+- in- and output `Date` values converted to `Temporal.Instant` or `Temporal.ZonedDateTime`.
 
 #### 0.1.0 &mdash; mschaeffler &mdash; 18.06.2026
 
