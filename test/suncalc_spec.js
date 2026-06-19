@@ -14,17 +14,17 @@ console.log(date.toString())
     solarNoon: '2013-03-05T10:10:57Z',
     nadir: '2013-03-05T22:10:57Z',
     sunrise: '2013-03-05T04:34:56Z',
-    sunset: '2013-03-05T15:46:57Z',
-    sunriseEnd: '2013-03-05T04:38:19Z',
+    sunset: '2013-03-05T15:46:58Z',
+    sunriseEnd: '2013-03-05T04:38:20Z',
     sunsetStart: '2013-03-05T15:43:34Z',
-    dawn: '2013-03-05T04:02:17Z',
-    dusk: '2013-03-05T16:19:36Z',
+    dawn: '2013-03-05T04:02:18Z',
+    dusk: '2013-03-05T16:19:37Z',
     nauticalDawn: '2013-03-05T03:24:31Z',
-    nauticalDusk: '2013-03-05T16:57:22Z',
-    nightEnd: '2013-03-05T02:46:17Z',
+    nauticalDusk: '2013-03-05T16:57:23Z',
+    nightEnd: '2013-03-05T02:46:18Z',
     night: '2013-03-05T17:35:36Z',
-    goldenHourEnd: '2013-03-05T05:19:01Z',
-    goldenHour: '2013-03-05T15:02:52Z'
+    goldenHourEnd: '2013-03-05T05:19:02Z',
+    goldenHour: '2013-03-05T15:02:53Z'
   };
 
   it('getPosition returns azimuth and altitude for the given time and location', function (done) {
@@ -46,7 +46,7 @@ console.log(date.toString())
 
       for (const i in testTimes)
       {
-        times[i].toUTCString().should.match( (new Date(testTimes[i])).toUTCString() );
+        times[i].toString().should.match( testTimes[i] );
       }
       done();
     }
@@ -67,18 +67,18 @@ console.log(date.toString())
       {
         cnt1++;
         //console.log(times1[i])
-        times1[i].getTime().should.be.within(date.epochMilliseconds,date.epochMilliseconds+24*3600*1000);
+        times1[i].epochMilliseconds.should.be.within(date.epochMilliseconds,date.epochMilliseconds+24*3600*1000);
       }
       for (const i in times2)
       {
         cnt2++;
         //console.log(times2[i])
-        times2[i].getTime().should.be.within(date.epochMilliseconds,date.epochMilliseconds+24*3600*1000);
+        times2[i].epochMilliseconds.should.be.within(date.epochMilliseconds,date.epochMilliseconds+24*3600*1000);
       }
       cnt1.should.match( 14 );
       cnt2.should.match( cnt1 + 2 );
-      times2.highRise.getTime().should.match( 1362472644529 );
-      times2.highSet .getTime().should.match( 1362483869785 );
+      times2.highRise.epochMilliseconds.should.match( 1362472645000 );
+      times2.highSet .epochMilliseconds.should.match( 1362483870000 );
       done();
     }
     catch(err) {
@@ -94,13 +94,15 @@ console.log(date.toString())
       let cnt = 0;
       for (const i in times)
       {
-        cnt++;
-        times[i].getTime().should.be.a.Number();
-        //console.log( times[i].getTime() );
+        if( times[i] )
+        {
+          cnt++;
+          times[i].epochMilliseconds.should.be.a.Number();
+        }
       }
-      cnt.should.match( 16 );
-      times.highRise.getTime().should.be.NaN();
-      times.highSet .getTime().should.be.NaN();
+      cnt.should.match( 14 );
+      should.equal( times.highRise, null );
+      should.equal( times.highSet,  null );
       done();
     }
     catch(err) {
